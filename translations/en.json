@@ -1,0 +1,6 @@
+{
+    "lang.updated": "Locale updated.",
+    "lang.lang": "Your locale is `{}`.",
+    "basic.hello": "Hello!",
+    "basic.ping": "Ping! {}secs"
+}

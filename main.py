@@ -1,0 +1,48 @@
+import os
+import sqlite3, pickle, json
+from discord.ext import commands
+import aiohttp
+
+LATEST_DB = 3
+EXTENSIONS = [filename[:-3] for filename in os.listdir("./cogs") if filename.endswith(".py")]
+
+with open("token.txt", "r", encoding="utf-8") as f:
+    TOKEN = f.read().strip()
+
+bot = commands.Bot(command_prefix='me:')
+bot.load_extension("jishaku")
+bot.session = aiohttp.ClientSession(loop=bot.loop)
+bot.default_extensions = EXTENSIONS
+
+sqlite3.register_converter('pickle', pickle.loads)
+sqlite3.register_converter('json', json.loads)
+sqlite3.register_adapter(dict, json.dumps)
+sqlite3.register_adapter(list, pickle.dumps)
+
+if not os.path.isfile('bot.db'):
+    dbv = -1
+else:
+    dbv = None
+dbw = sqlite3.connect('bot.db', detect_types=sqlite3.PARSE_DECLTYPES, isolation_level=None)
+dbw.row_factory = sqlite3.Row
+db = dbw.cursor()
+dbv = dbv or db.execute('PRAGMA user_version').fetchone()[0]
+if dbv < LATEST_DB:
+    print("Migrating now...")
+    for i in range(dbv + 1, LATEST_DB + 1):
+        if not os.path.isfile(f'./migrate/v{i}.sql'):
+            continue
+        with open(f'./migrate/v{i}.sql') as f:
+            db.executescript(f.read())
+    db.execute('PRAGMA user_version = {}'.format(LATEST_DB))
+
+bot.db = db
+
+for extension in EXTENSIONS:
+    bot.load_extension(f'cogs.{extension}')
+
+@bot.event
+async def on_message(msg):
+    pass # handle at my cog
+
+bot.run(TOKEN)
