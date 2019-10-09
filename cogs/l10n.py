@@ -7,6 +7,15 @@ class LocalizedContext(commands.Context):
     def __init__(self, bot, message, *args, **kwargs):
         super().__init__(bot=bot, message=message, *args, **kwargs)
         self._ = lambda key, *targs: bot._(key, message.author, *targs)
+        self.say = lambda *targs: message.channel.send(self._(*targs))
+
+    @property
+    def session(self):
+        return self.bot.session
+
+    @property
+    def db(self):
+        return self.bot.db
 
 class Localization(commands.Cog):
     def __init__(self, bot):
@@ -47,8 +56,7 @@ class Localization(commands.Cog):
         if msg.author.bot:
             return
         ctx = await self.bot.get_context(msg, cls=LocalizedContext)
-        if ctx.valid:
-            await self.bot.invoke(ctx)
+        await self.bot.invoke(ctx)
 
     @commands.Cog.listener()
     async def on_command(self, ctx):
@@ -61,12 +69,13 @@ class Localization(commands.Cog):
 
     @commands.command()
     async def lang(self, ctx, lang=None):
+        """Sets your language when you have argument. Shows your language when you just do me:lang."""
         if lang and lang in SUPPORTED_LANGS:
-            self.bot.db.execute("UPDATE users SET lang = ? WHERE user_id = ?", (lang, ctx.author.id))
-            await ctx.send(ctx._("lang.updated"))
+            ctx.db.execute("UPDATE users SET lang = ? WHERE user_id = ?", (lang, ctx.author.id))
+            await ctx.say("lang.updated")
         else:
-            my_lang = self.bot.db.execute("SELECT lang FROM users WHERE user_id = ?", (ctx.author.id,)).fetchone()["lang"]
-            await ctx.send(ctx._("lang.lang", my_lang))
+            my_lang = ctx.db.execute("SELECT lang FROM users WHERE user_id = ?", (ctx.author.id,)).fetchone()["lang"]
+            await ctx.say("lang.lang", my_lang)
 
 def setup(bot):
     bot.add_cog(Localization(bot))

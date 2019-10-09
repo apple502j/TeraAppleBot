@@ -7,16 +7,24 @@ class Basic(commands.Cog):
 
     @commands.command()
     async def hello(self, ctx):
-        await ctx.send(ctx._("basic.hello"))
+        """Say hello."""
+        await ctx.say("basic.hello")
 
     @commands.command()
     async def ping(self, ctx):
-        await ctx.send(ctx._("basic.ping", round(self.bot.latency*100)/100))
+        """Ping"""
+        await ctx.say("basic.ping", round(self.bot.latency*100)/100)
+
+    @commands.command()
+    async def credits(self, ctx):
+        """Show credits."""
+        await ctx.say("basic.credits")
 
     @commands.command()
     async def repeat(self, ctx, *, text=''):
+        """Repeats what you said and deletes when you delete. at-everyone attack prevention available"""
         msg = await ctx.send(discord.utils.escape_mentions(text))
-        self.bot.db.execute("INSERT INTO pending_delete values (?,?,?)", (ctx.message.id, ctx.channel.id, msg.id))
+        ctx.db.execute("INSERT INTO pending_delete values (?,?,?)", (ctx.message.id, ctx.channel.id, msg.id))
 
     async def delete_handler(self, message_id):
         pending = self.bot.db.execute("SELECT * FROM pending_delete WHERE original_id = ?", (message_id,)).fetchone()

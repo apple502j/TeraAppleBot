@@ -3,7 +3,7 @@ import sqlite3, pickle, json
 from discord.ext import commands
 import aiohttp
 
-LATEST_DB = 3
+LATEST_DB = 4
 EXTENSIONS = [filename[:-3] for filename in os.listdir("./cogs") if filename.endswith(".py")]
 
 with open("token.txt", "r", encoding="utf-8") as f:
@@ -44,5 +44,17 @@ for extension in EXTENSIONS:
 @bot.event
 async def on_message(msg):
     pass # handle at my cog
+
+_close = bot.close
+async def close_handler():
+    try:
+        dbw.commit()
+    except sqlite3.ProgrammingError:
+        pass
+    else:
+        dbw.close()
+    await bot.session.close()
+    await _close()
+bot.close = close_handler
 
 bot.run(TOKEN)
