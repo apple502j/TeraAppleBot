@@ -47,6 +47,7 @@ class OnlineNotif(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     async def onlinenotif(self, ctx):
+        """Returns the name of the users you are receiving online notifications of."""
         users = [
             self.bot.get_user(user_id)
             for user_id
@@ -59,6 +60,7 @@ class OnlineNotif(commands.Cog):
 
     @onlinenotif.command(aliases=["add"])
     async def subscribe(self, ctx, user: discord.User):
+        """Subscribes to this user."""
         subscribing = self.get_subscribing_of_user(ctx.author)
         if user.id in subscribing:
             return await ctx.say("onlinenotif.already")
@@ -70,6 +72,7 @@ class OnlineNotif(commands.Cog):
 
     @onlinenotif.command(aliases=["remove", "del"])
     async def unsubscribe(self, ctx, user: discord.User):
+        """Un-subscribes to this user."""
         subscribing = self.get_subscribing_of_user(ctx.author)
         if user.id not in subscribing:
             return await ctx.say("onlinenotif.yet")

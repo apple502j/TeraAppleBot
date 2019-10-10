@@ -1,9 +1,9 @@
 import os
-import sqlite3, pickle, json
+import sqlite3, pickle, json, bz2
 from discord.ext import commands
 import aiohttp
 
-LATEST_DB = 4
+LATEST_DB = 5
 EXTENSIONS = [filename[:-3] for filename in os.listdir("./cogs") if filename.endswith(".py")]
 
 with open("token.txt", "r", encoding="utf-8") as f:
