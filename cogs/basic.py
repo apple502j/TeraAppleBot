@@ -1,26 +1,27 @@
 import discord
 from discord.ext import commands
+from .utils import Command
 
 class Basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(id=3, cls=Command)
     async def hello(self, ctx):
         """Say hello."""
         await ctx.say("basic.hello")
 
-    @commands.command()
+    @commands.command(id=4, cls=Command)
     async def ping(self, ctx):
         """Ping"""
         await ctx.say("basic.ping", round(self.bot.latency*100)/100)
 
-    @commands.command()
+    @commands.command(id=5, cls=Command)
     async def credits(self, ctx):
         """Show credits."""
         await ctx.say("basic.credits")
 
-    @commands.command()
+    @commands.command(id=6, cls=Command)
     async def repeat(self, ctx, *, text=''):
         """Repeats what you said and deletes when you delete. at-everyone attack prevention available"""
         msg = await ctx.send(discord.utils.escape_mentions(text))

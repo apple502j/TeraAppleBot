@@ -1,5 +1,6 @@
 import os, json
 from discord.ext import commands, tasks
+from .utils import Command
 
 SUPPORTED_LANGS = {"en"}
 
@@ -67,7 +68,7 @@ class Localization(commands.Cog):
         for user in self.bot.users:
             self.store_user(user)
 
-    @commands.command()
+    @commands.command(id=1, cls=Command)
     async def lang(self, ctx, lang=None):
         """Sets your language when you have argument. Shows your language when you just do me:lang."""
         if lang and lang in SUPPORTED_LANGS:

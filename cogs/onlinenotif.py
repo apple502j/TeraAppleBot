@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from .utils import Group
 
 class OnlineNotif(commands.Cog):
     def __init__(self, bot):
@@ -13,7 +14,7 @@ class OnlineNotif(commands.Cog):
             ]
         self.bot.shares_guild = shares_guild
         def get_member(user_id):
-            return discord.utils.get(self.bot.get_all_members(), id=user_id)
+            return discord.utils.get(list(self.bot.get_all_members()), id=user_id)
         self.bot.get_member = get_member
 
     def get_subscribers(self):
@@ -45,7 +46,7 @@ class OnlineNotif(commands.Cog):
                 user = self.bot.get_user(subsc)
                 await user.send(self.bot._("onlinenotif.notif", user, str(before)))
 
-    @commands.group(invoke_without_command=True)
+    @commands.group(invoke_without_command=True, id=8, cls=Group)
     async def onlinenotif(self, ctx):
         """Returns the name of the users you are receiving online notifications of."""
         users = [

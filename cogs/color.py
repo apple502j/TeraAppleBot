@@ -1,12 +1,13 @@
 import discord
 from discord.ext import commands
 from PIL import ImageColor, Image
+from .utils import Command
 
 class Color(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(id=7, cls=Command)
     async def color(self, ctx, *, color = 'black'):
         """Returns a picture filled with a color. The argument can be:
         * hex value: 0xFFFFFF, #FFFFFF

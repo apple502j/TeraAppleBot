@@ -76,6 +76,10 @@ class Connect3(commands.Cog):
 
     @commands.command()
     async def connect3(self, ctx):
+        """Play Connect-3(Tic Tac Toe). You connect 3 stones.
+        Circle is your stone. Rect is the bot's stone.
+        You can only run one game at a time per channel.
+        (i.e. do it on DM for if someone is playing)"""
         if ctx.channel.id in self.using:
             return await ctx.say("connect3.using")
         else:

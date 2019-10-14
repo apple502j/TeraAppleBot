@@ -4,11 +4,28 @@ from random import randint
 import datetime
 import discord
 from discord.ext import commands
+from .utils import Group
 
 class NoCheckHelp(commands.DefaultHelpCommand):
     def __init__(self, **opts):
         super().__init__(**opts)
         self.verify_checks = False
+
+    def add_command_formatting(self, command):
+        if command.description:
+            self.paginator.add_line(command.description, empty=True)
+
+        signature = self.get_command_signature(command)
+        self.paginator.add_line(signature, empty=True)
+
+        if command.help:
+            try:
+                self.paginator.add_line(command.help, empty=True)
+            except RuntimeError:
+                for line in command.help.splitlines():
+                    self.paginator.add_line(line)
+                self.paginator.add_line()
+        self.paginator.add_line(f"ID of this command is {getattr(command, 'id', 'not set')}.")
 
 class NotPollOwner(commands.CheckFailure):
     pass
@@ -71,7 +88,7 @@ class Vote(commands.Cog):
         if isinstance(error, NotPollOwner):
             await ctx.say("vote.notPollOwner")
 
-    @commands.group(invoke_without_command=True)
+    @commands.group(invoke_without_command=True, id=9, cls=Group)
     async def vote(self, ctx):
         pass
 
@@ -104,7 +121,7 @@ class Vote(commands.Cog):
         embed = discord.Embed(
             title=ctx._("vote.voteTitle", poll["title"]),
             description=self.get(poll, "description", ctx._("vote.none")),
-            color=discord.Color.green() if self.is_available(poll_id) else discord.Color.red(),
+            color=discord.Color.blue() if self.is_available(poll_id) else discord.Color.red(),
             timestamp=expires_at
         )
         embed.add_field(name=ctx._("vote.createdBy"), value=f"<@{poll['created_by']}>", inline=True)
@@ -147,7 +164,7 @@ class Vote(commands.Cog):
         no = len(poll["no_users"]) and poll["no_users"].count(",")
         embed = discord.Embed(
             title=ctx._("vote.pollResult", poll["title"]),
-            color=discord.Color.green() if yes>=no else discord.Color.red(),
+            color=discord.Color.blue() if yes>=no else discord.Color.red(),
             timestamp=datetime.datetime.utcnow()
         )
         embed.add_field(name=ctx._("vote.yes"), value=str(yes), inline=True)
