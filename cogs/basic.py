@@ -5,6 +5,21 @@ from .utils import Command
 class Basic(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        _exec = bot.db.execute
+        bot._db = _db = bot.db
+        class DBMock:
+            def __getattr__(self, attr):
+                if attr == "execute":
+                    def execute(text, param=None):
+                        print(f"SQL: {text}")
+                        return _exec(text, param) if param else _exec(text)
+                    return execute
+                else:
+                    return getattr(_db, attr)
+            def execute(self, text, param=None):
+                print(f"SQL: {text}")
+                return _exec(text, param) if param else _exec(text)
+        #bot.db = DBMock()
 
     @commands.command(id=3, cls=Command)
     async def hello(self, ctx):
@@ -40,6 +55,11 @@ class Basic(commands.Cog):
     async def on_raw_bulk_message_delete(self, payload):
         for i in payload.message_ids:
             await self.delete_handler(i)
+
+    @commands.command(id=21, cls=Command)
+    @commands.is_owner()
+    async def largest_id(self, ctx):
+        await ctx.send(sorted(self.bot.walk_commands(), key=lambda cmd: getattr(cmd, "id", -1), reverse=True)[0].id)
 
 def setup(bot):
     bot.add_cog(Basic(bot))

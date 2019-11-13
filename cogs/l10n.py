@@ -1,4 +1,5 @@
 import os, json
+import discord
 from discord.ext import commands, tasks
 from .utils import Command
 
@@ -24,7 +25,7 @@ class Localization(commands.Cog):
         def store_user(user):
             if not self.bot.db.execute("SELECT user_id FROM users WHERE user_id = ?", (user.id,)).fetchone():
                 print(f'DB: Stored user {user.id}')
-                self.bot.db.execute("INSERT INTO users values (?,?,?)", (user.id, "en",""))
+                self.bot.db.execute("INSERT INTO users values (?,?,?,0)", (user.id, "en",""))
         self.store_user = self.bot.store_user = store_user
 
         def translate_handler(text_id, user, *args):
@@ -57,6 +58,12 @@ class Localization(commands.Cog):
         if msg.author.bot:
             return
         ctx = await self.bot.get_context(msg, cls=LocalizedContext)
+        if ctx.command and ctx.command.root_parent and ctx.command.root_parent.name == "jishaku":
+            async def safe_send(content=None, *args, **kwargs):
+                if content:
+                    return await ctx.channel.send(discord.utils.escape_mentions(content), *args, **kwargs)
+                return await ctx.channel.send(*args, **kwargs)
+            ctx.send = safe_send
         await self.bot.invoke(ctx)
 
     @commands.Cog.listener()

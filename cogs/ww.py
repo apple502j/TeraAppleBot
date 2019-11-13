@@ -62,7 +62,8 @@ class WW(commands.Cog):
                 selfa.say = lambda *targs: selfa.send(selfa._(*targs))
         mocky=MockCTX()
         em=[]
-        for pref in ("東京都", "神奈川県","静岡県", "長野県", "山梨県", "千葉県", "埼玉県", "群馬県", "栃木県", "茨城県"):
+        #for pref in ("東京都", "神奈川県","静岡県", "長野県", "山梨県", "千葉県", "埼玉県", "群馬県", "栃木県", "茨城県"):
+        for pref in ("三重県",):
             emb=await self.ww_(mocky, pref)
             #await asyncio.sleep(10)
             print(type(emb))
@@ -70,11 +71,12 @@ class WW(commands.Cog):
         await mocky.send(embeds=em)
         em=[]
         for pref in ("宮城県", "福島県", "新潟県", "岩手県"):
-            emb=await self.ww_(mocky, pref)
+            #emb=await self.ww_(mocky, pref)
             #await asyncio.sleep(10)
-            print(type(emb))
-            em.append(emb)
-        await mocky.send(embeds=em)
+            #print(type(emb))
+            #em.append(emb)
+            pass
+        #await mocky.send(embeds=em)
 
     #@send_loop.before_loop
     async def bl(self):

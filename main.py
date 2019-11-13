@@ -3,7 +3,7 @@ import sqlite3, pickle, json, bz2
 from discord.ext import commands
 import aiohttp
 
-LATEST_DB = 6
+LATEST_DB = 8
 EXTENSIONS = [filename[:-3] for filename in os.listdir("./cogs") if filename.endswith(".py")]
 
 with open("token.txt", "r", encoding="utf-8") as f:
@@ -11,7 +11,12 @@ with open("token.txt", "r", encoding="utf-8") as f:
 
 bot = commands.Bot(command_prefix='me:')
 bot.load_extension("jishaku")
-bot.session = aiohttp.ClientSession(loop=bot.loop)
+bot.session = aiohttp.ClientSession(
+    headers={
+        "User-Agent": "TeraAppleBot/apple502j; aiohttp on Python 3.7;"
+    },
+    skip_auto_headers=["User-Agent"]
+)
 bot.default_extensions = EXTENSIONS
 
 sqlite3.register_converter('pickle', pickle.loads)

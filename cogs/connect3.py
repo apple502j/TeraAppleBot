@@ -2,6 +2,7 @@ import io, random, re, asyncio
 from PIL import Image, ImageDraw
 import discord
 from discord.ext import commands
+from .utils import Command
 
 class Stone(discord.Enum):
     EMPTY = 0
@@ -74,7 +75,7 @@ class Connect3(commands.Cog):
             board[y][x]=Stone.EMPTY
         return random.choice(placeable)
 
-    @commands.command()
+    @commands.command(id=20, cls=Command)
     async def connect3(self, ctx):
         """Play Connect-3(Tic Tac Toe). You connect 3 stones.
         Circle is your stone. Rect is the bot's stone.

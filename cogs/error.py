@@ -1,6 +1,7 @@
 import traceback, sys
 import discord
 from discord.ext import commands
+from .stars import StarError
 
 class Error(commands.Cog):
     def __init__(self, bot):
@@ -26,6 +27,8 @@ class Error(commands.Cog):
             return await ctx.say("error.disabled")
         elif isinstance(err, commands.CommandOnCooldown):
             return await ctx.say("error.cooldown", err.retry_after)
+        elif isinstance(err, StarError):
+            return await ctx.send(err.message)
         else:
             traceback.print_exception(type(err), err, err.__traceback__, file=sys.stderr)
 
