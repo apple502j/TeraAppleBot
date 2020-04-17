@@ -15,7 +15,7 @@ class Locker(commands.Cog):
         def store_guild(guild):
             if not self.bot.db.execute("SELECT guild_id FROM guilds WHERE guild_id = ?", (guild.id,)).fetchone():
                 print(f'DB: Stored guild {guild.id}')
-                self.bot.db.execute("INSERT INTO guilds values (?,?)", (guild.id, 0))
+                self.bot.db.execute("INSERT INTO guilds values (?,?,0)", (guild.id, 0))
         self.bot.store_guild = store_guild
 
     @commands.Cog.listener()

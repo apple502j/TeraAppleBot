@@ -1,0 +1,138 @@
+[
+    {
+        "name": "fish.fish",
+        "chance": 0.85,
+        "results": [
+            {
+                "name": "fish.cod",
+                "chance": 60,
+                "emoji": "🐟"
+            },
+            {
+                "name": "fish.salmon",
+                "chance": 25,
+                "emoji": "🐟"
+            },
+            {
+                "name": "fish.tropicalFish",
+                "chance": 2,
+                "emoji": "🐠"
+            },
+            {
+                "name": "fish.pufferfish",
+                "chance": 13,
+                "emoji": "🐡"
+            }
+        ]
+    },
+    {
+        "name": "fish.treasure",
+        "chance": 0.05,
+        "results": [
+            {
+                "name": "fish.bow",
+                "chance": 143,
+                "emoji": "🏹",
+                "damage": [0.005, 0.2],
+                "durability": 384
+            },
+            {
+                "name": "fish.enchantBook",
+                "chance": 143,
+                "emoji": "📕"
+            },
+            {
+                "name": "fish.enchantedFishingRod",
+                "chance": 143,
+                "emoji": "🎣",
+                "damage": [0.005, 0.2],
+                "durability": 64
+            },
+            {
+                "name": "fish.nameTag",
+                "chance": 143,
+                "emoji": "📛"
+            },
+            {
+                "name": "fish.nautilusShell",
+                "chance": 143,
+                "emoji": "🐚"
+            },
+            {
+                "name": "fish.saddle",
+                "chance": 143,
+                "emoji": "🏇"
+            },
+            {
+                "name": "fish.lilyPad",
+                "chance": 143,
+                "emoji": "🍃"
+            }
+        ]
+    },
+    {
+        "name": "fish.junk",
+        "chance": 0.1,
+        "results": [
+            {
+                "name": "fish.bowl",
+                "chance": 120,
+                "emoji": "🥣"
+            },
+            {
+                "name": "fish.fishingRod",
+                "chance": 24,
+                "emoji": "🎣",
+                "damage": [0.01, 0.9],
+                "durability": 64
+            },
+            {
+                "name": "fish.leather",
+                "chance": 120,
+                "emoji": "🟫"
+            },
+            {
+                "name": "fish.leatherBoots",
+                "chance": 120,
+                "emoji": "👢",
+                "damage": [0.01, 0.9],
+                "durability": 65
+            },
+            {
+                "name": "fish.rottenFlesh",
+                "chance": 120,
+                "emoji": "🍖"
+            },
+            {
+                "name": "fish.stick",
+                "chance": 60,
+                "emoji": "🥢"
+            },
+            {
+                "name": "fish.string",
+                "chance": 60,
+                "emoji": "🧵"
+            },
+            {
+                "name": "fish.waterBottle",
+                "chance": 120,
+                "emoji": "🍼"
+            },
+            {
+                "name": "fish.bone",
+                "chance": 120,
+                "emoji": "🦴"
+            },
+            {
+                "name": "fish.inkSac",
+                "chance": 12,
+                "emoji": "🦑"
+            },
+            {
+                "name": "fish.tripwireHook",
+                "chance": 120,
+                "emoji": "🔌"
+            }
+        ]
+    }
+]

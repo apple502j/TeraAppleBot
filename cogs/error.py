@@ -27,6 +27,8 @@ class Error(commands.Cog):
             return await ctx.say("error.disabled")
         elif isinstance(err, commands.CommandOnCooldown):
             return await ctx.say("error.cooldown", err.retry_after)
+        elif isinstance(err, commands.MaxConcurrencyReached):
+            return await ctx.say("error.concurrency")
         elif isinstance(err, StarError):
             return await ctx.send(err.message)
         else:

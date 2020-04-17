@@ -20,6 +20,12 @@ class Inviter(commands.Cog):
                 manage_messages=True,
                 manage_roles=True,
                 manage_channels=True
+            ),
+            "voice": perms(
+                required,
+                connect=True,
+                speak=True,
+                move_members=True
             )
         }
 
@@ -29,7 +35,7 @@ class Inviter(commands.Cog):
 
     @commands.command(id=32, cls=Command)
     async def invite(self, ctx, kind="all"):
-        """Gets my invite. kind can be omitted for basic permissions, and can be `starboard` for starboard."""
+        """Gets my invite. kind can be omitted for basic permissions, and can be `starboard` for starboard, or `voice` for voice."""
         if kind in self.perms:
             url = discord.utils.oauth_url(self.bot.user.id, self.perms[kind])
             desc = ctx._(f"inviter.{kind}Type")

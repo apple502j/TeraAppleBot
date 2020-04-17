@@ -104,6 +104,7 @@ class Stars(commands.Cog):
         These are the checks done, in order:
         - ignore any non-stars
         - ignore bots
+        - ignore banneds
         - ignore conditions where starboard is not available, including:
         -- DM
         -- starboard not registered
@@ -124,6 +125,8 @@ class Stars(commands.Cog):
         if str(payload.emoji) != STAR_EMOJI:
             return
         if self.bot.get_user(payload.user_id).bot:
+            return
+        if getattr(self.bot, "is_banned", None) and await self.bot.is_banned(payload.user_id):
             return
         guild = self.bot.get_guild(payload.guild_id)
         ctx = FakeContext(guild)
@@ -164,6 +167,8 @@ class Stars(commands.Cog):
         if str(payload.emoji) != STAR_EMOJI:
             return
         if self.bot.get_user(payload.user_id).bot:
+            return
+        if getattr(self.bot, "is_banned", None) and await self.bot.is_banned(payload.user_id):
             return
         guild = self.bot.get_guild(payload.guild_id)
         ctx = FakeContext(guild)

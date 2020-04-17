@@ -1,6 +1,7 @@
+from datetime import datetime
 import discord
 from discord.ext import commands
-from .utils import Group
+from .utils import Group, within
 
 class OnlineNotif(commands.Cog):
     def __init__(self, bot):
@@ -16,6 +17,8 @@ class OnlineNotif(commands.Cog):
         def get_member(user_id):
             return discord.utils.get(list(self.bot.get_all_members()), id=user_id)
         self.bot.get_member = get_member
+
+        self._last_posted = {}
 
     def get_subscribers(self):
         return [
@@ -35,12 +38,21 @@ class OnlineNotif(commands.Cog):
             if user.id in i["subscribe"]
         ]
 
+    def onlinenotif_enabled(self, user):
+        enabled = self.bot.db.execute("SELECT online_agreed FROM users WHERE user_id = ?", (user.id,)).fetchone()
+        return enabled and enabled["online_agreed"]
+
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         if before.status == after.status:
             return
         if before.status != discord.Status.offline:
             return
+        if not self.onlinenotif_enabled(before):
+            return
+        if self._last_posted.get(before.id, None) and within(self._last_posted[before.id], 3):
+            return
+        self._last_posted[before.id] = datetime.utcnow()
         for subsc in self.get_subscribed_of_user(before):
             if self.bot.shares_guild(before.id, subsc) and self.bot.get_member(subsc).status != discord.Status.offline:
                 user = self.bot.get_user(subsc)
@@ -81,6 +93,13 @@ class OnlineNotif(commands.Cog):
         new_value = ",".join(subscribing)
         ctx.db.execute("UPDATE users SET subscribe = ? WHERE user_id = ?",(new_value, ctx.author.id))
         await ctx.say("onlinenotif.removeSuccess")
+
+    @onlinenotif.command()
+    async def settings(self, ctx, enabled: bool = False):
+        """Choose whether someone can receive your online notification.
+        Note that you have to share server with that user."""
+        ctx.db.execute("UPDATE users SET online_agreed = ? WHERE user_id = ?", (int(enabled), ctx.author.id))
+        await ctx.say("onlinenotif.settings")
 
 
 def setup(bot):

@@ -1,9 +1,10 @@
 import os
-import sqlite3, pickle, json, bz2
+import sqlite3, pickle, json, bz2, logging
 from discord.ext import commands
 import aiohttp
 
-LATEST_DB = 8
+
+LATEST_DB = 10
 EXTENSIONS = [filename[:-3] for filename in os.listdir("./cogs") if filename.endswith(".py")]
 
 with open("token.txt", "r", encoding="utf-8") as f:
@@ -15,7 +16,8 @@ bot.session = aiohttp.ClientSession(
     headers={
         "User-Agent": "TeraAppleBot/apple502j; aiohttp on Python 3.7;"
     },
-    skip_auto_headers=["User-Agent"]
+    skip_auto_headers=["User-Agent"],
+    loop=bot.loop
 )
 bot.default_extensions = EXTENSIONS
 
@@ -49,6 +51,14 @@ for extension in EXTENSIONS:
 @bot.event
 async def on_message(msg):
     pass # handle at my cog
+
+bot._on_ready_fired = False
+
+@bot.event
+async def on_ready():
+    if not bot._on_ready_fired:
+        bot.dispatch("ready_once")
+        bot._on_ready_fired = True
 
 _close = bot.close
 async def close_handler():

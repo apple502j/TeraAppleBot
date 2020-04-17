@@ -19,13 +19,16 @@ class LocalizedContext(commands.Context):
     def db(self):
         return self.bot.db
 
+    def __eq__(self, other):
+        return self.message.id == other.message.id
+
 class Localization(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         def store_user(user):
             if not self.bot.db.execute("SELECT user_id FROM users WHERE user_id = ?", (user.id,)).fetchone():
                 print(f'DB: Stored user {user.id}')
-                self.bot.db.execute("INSERT INTO users values (?,?,?,0)", (user.id, "en",""))
+                self.bot.db.execute("INSERT INTO users values (?,?,?,0,0,0)", (user.id, "en",""))
         self.store_user = self.bot.store_user = store_user
 
         def translate_handler(text_id, user, *args):
